@@ -8,15 +8,8 @@ PASSWORD = "password1234"
 
 class TestLogin:
 
-    def setup_method(self):
-        self.driver = webdriver.Chrome()
-        self.driver.maximize_window()
-        self.driver.get(
-            "https://stellarburgers.education-services.ru"
-        )
-
-    def teardown_method(self):
-        self.driver.quit()
+    def test_login_from_main_page(self, driver):
+        login_page = LoginPage(driver)
 
     # Вход через кнопку "Войти в аккаунт" на главной странице
 
