@@ -87,9 +87,9 @@ class LoginPage:
     ).click()
 
     def click_login_from_forgot_password(self):
-     self.wait.until(
-        EC.element_to_be_clickable(self.LOGIN_FROM_FORGOT_PASSWORD)
-    ).click()
+        self.wait.until(
+            EC.element_to_be_clickable(self.LOGIN_FROM_REGISTER)
+        ).click()
        
     def click_constructor(self):
         self.wait.until(
