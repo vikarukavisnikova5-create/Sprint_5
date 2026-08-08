@@ -4,14 +4,6 @@ from selenium import webdriver
 @pytest.fixture
 def driver():
     driver = webdriver.Chrome()
-
+    driver.maximize_window()
     yield driver
-
     driver.quit()
-driver = webdriver.Chrome()
-
-driver.get("https://stellarburgers.education-services.ru/")
-
-# действия теста
-
-driver.quit()

@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import random
 
-class TestRegistration:
+class TestSuccessfulRegistration:
 
     def setup_method(self):
         self.driver = webdriver.Chrome()

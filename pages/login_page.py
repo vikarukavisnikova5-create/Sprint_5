@@ -20,6 +20,7 @@ class LoginPage:
     LOGIN_BUTTON = (By.XPATH,"//button[contains(text(),'Войти')]")
     CONSTRUCTOR = (By.XPATH,"//p[contains(text(),'Конструктор')]")
     FORGOT_PASSWORD_LINK = (By.XPATH,"//a[contains(text(),'Восстановить пароль')]")
+    LOGIN_FROM_FORGOT_PASSWORD = (By.XPATH,"//a[contains(text(),'Войти')]")
     LOGOUT_BUTTON = (By.XPATH,"//button[text()='Выход']")
     # Конструктор
     BUNS = (By.XPATH,"//span[text()='Булки']")
@@ -79,10 +80,17 @@ class LoginPage:
         return self.wait.until(
             EC.visibility_of_element_located(self.CONSTRUCTOR)
         ).is_displayed()
+    
     def click_forgot_password(self):
        self.wait.until(
         EC.element_to_be_clickable(self.FORGOT_PASSWORD_LINK)
     ).click()
+
+    def click_login_from_forgot_password(self):
+     self.wait.until(
+        EC.element_to_be_clickable(self.LOGIN_FROM_FORGOT_PASSWORD)
+    ).click()
+       
     def click_constructor(self):
         self.wait.until(
             EC.element_to_be_clickable(self.CONSTRUCTOR_BUTTON)

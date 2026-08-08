@@ -132,9 +132,6 @@ class TestLogin:
         assert login_page.is_constructor_visible()
 
     # Выход из аккаунта через кнопку "Выйти"
-
-class TestLogin:
-
     def setup_method(self):
         self.driver = webdriver.Chrome()
         self.driver.maximize_window()
