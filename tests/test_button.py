@@ -8,16 +8,6 @@ PASSWORD = "password1234"
 
 class TestNavigation:
 
-    def setup_method(self):
-        self.driver = webdriver.Chrome()
-        self.driver.maximize_window()
-        self.driver.get(
-            "https://stellarburgers.education-services.ru"
-        )
-
-    def teardown_method(self):
-        self.driver.quit()
-
     # Переход в личный кабинет
 
     def test_go_to_personal_account(self):
