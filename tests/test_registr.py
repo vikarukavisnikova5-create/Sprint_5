@@ -6,18 +6,6 @@ import random
 
 class TestSuccessfulRegistration:
 
-    def setup_method(self):
-        self.driver = webdriver.Chrome()
-        self.driver.maximize_window()
-        self.wait = WebDriverWait(self.driver, 10)
-
-        self.driver.get(
-            "https://stellarburgers.education-services.ru/register"
-        )
-
-    def teardown_method(self):
-        self.driver.quit()
-
     def test_success_registration(self):
 
         # Уникальный email
