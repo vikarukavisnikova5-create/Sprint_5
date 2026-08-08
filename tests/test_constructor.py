@@ -5,18 +5,6 @@ from pages.login_page import LoginPage
 
 class TestConstructor:
 
-    def setup_method(self):
-        self.driver = webdriver.Chrome()
-        self.driver.maximize_window()
-        self.driver.get(
-            "https://stellarburgers.education-services.ru"
-        )
-
-        self.wait = WebDriverWait(self.driver, 10)
-
-    def teardown_method(self):
-        self.driver.quit()
-
     def test_go_to_buns_section(self):
 
         login_page = LoginPage(self.driver)
