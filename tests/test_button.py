@@ -1,112 +1,85 @@
-from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
-
 from pages.login_page import LoginPage
-
-EMAIL = "victoria_rukavishnikova_50_666@ya.ru"
-PASSWORD = "password1234"
+from data import EMAIL, PASSWORD
+from pages.url import MAIN_PAGE_URL, ACCOUNT_URL
 
 class TestNavigation:
-
-    # Переход в личный кабинет
-
-    def test_go_to_personal_account(self):
-
-        login_page = LoginPage(self.driver)
-
-        # Нажимаем "Войти в аккаунт"
+    # Проверяем переход в личный кабинет
+    def test_go_to_personal_account(self, driver):
+        login_page = LoginPage(driver)
+        # Нажимаем «Войти в аккаунт»
         login_page.click_login_button_main()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/login" in driver.current_url
-        )
-
+        # Вводим email
         login_page.set_email(EMAIL)
+        # Вводим пароль
         login_page.set_password(PASSWORD)
-
+        # Нажимаем «Войти»
         login_page.click_login()
-
-        # Проверяем вход
-        assert login_page.is_constructor_visible()
-
-        # Переходим в личный кабинет
+        # Ждём успешного входа
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url != "https://stellarburgers.education-services.ru/login"
+        )
+        # Нажимаем «Личный кабинет»
         login_page.click_personal_account()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/profile" in driver.current_url
+        # Ждём переход в личный кабинет
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url == ACCOUNT_URL
         )
-
-        assert "/profile" in self.driver.current_url
-
-    # Переход из личного кабинета в Конструктор
-
-    def test_go_to_constructor_from_personal_account(self):
-
-        login_page = LoginPage(self.driver)
-
-        # Авторизация
+        # Проверяем переход в личный кабинет
+        assert driver.current_url == ACCOUNT_URL
+    # Проверяем переход из личного кабинета в конструктор
+    def test_go_to_constructor_from_personal_account(self, driver):
+        login_page = LoginPage(driver)
+        # Нажимаем «Войти в аккаунт»
         login_page.click_login_button_main()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/login" in driver.current_url
-        )
-
+        # Вводим email
         login_page.set_email(EMAIL)
+        # Вводим пароль
         login_page.set_password(PASSWORD)
-
+        # Нажимаем «Войти»
         login_page.click_login()
-
-        assert login_page.is_constructor_visible()
-
+        # Ждём успешного входа
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url != "https://stellarburgers.education-services.ru/login"
+        )
         # Открываем личный кабинет
         login_page.click_personal_account()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/profile" in driver.current_url
+        # Ждём открытия личного кабинета
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url == ACCOUNT_URL
         )
-
-        # Нажимаем "Конструктор"
+        # Нажимаем «Конструктор»
         login_page.click_constructor()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/" in driver.current_url
+        # Проверяем переход на главную страницу
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url == MAIN_PAGE_URL
         )
-
-        assert "/profile" not in self.driver.current_url
-
-    # Переход по логотипу Stellar Burgers
-
-    def test_go_to_constructor_by_logo(self):
-
-        login_page = LoginPage(self.driver)
-
-        # Авторизация
+        assert driver.current_url == MAIN_PAGE_URL
+    # Проверяем переход в конструктор через логотип
+    def test_go_to_constructor_by_logo(self, driver):
+        login_page = LoginPage(driver)
+        # Нажимаем «Войти в аккаунт»
         login_page.click_login_button_main()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/login" in driver.current_url
-        )
-
+        # Вводим email
         login_page.set_email(EMAIL)
+        # Вводим пароль
         login_page.set_password(PASSWORD)
-
+        # Нажимаем «Войти»
         login_page.click_login()
-
-        assert login_page.is_constructor_visible()
-
-        # Переходим в личный кабинет
+        # Ждём успешного входа
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url != "https://stellarburgers.education-services.ru/login"
+        )
+        # Открываем личный кабинет
         login_page.click_personal_account()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/profile" in driver.current_url
+        # Ждём открытия личного кабинета
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url == ACCOUNT_URL
         )
-
-        # Нажимаем логотип
+        # Нажимаем на логотип Stellar Burgers
         login_page.click_logo()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/profile" not in driver.current_url
+        # Проверяем переход на главную страницу
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url == MAIN_PAGE_URL
         )
-
-        assert "/profile" not in self.driver.current_url
-
+        assert driver.current_url == MAIN_PAGE_URL

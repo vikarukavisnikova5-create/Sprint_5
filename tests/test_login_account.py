@@ -2,28 +2,38 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 
 from pages.login_page import LoginPage
-
-EMAIL = "victoria_rukavishnikova_50_666@ya.ru"
-PASSWORD = "password1234"
+from data import EMAIL, PASSWORD
+from pages.url import (
+    MAIN_URL,
+    REGISTER_URL,
+    LOGIN_URL,
+    FORGOT_PASSWORD,
+    ACCOUNT_URL
+)
 
 class TestLogin:
 
-    def test_login_from_main_page(self, driver):
-        login_page = LoginPage(driver)
+    def setup_method(self):
+        self.driver = webdriver.Chrome()
+        self.driver.maximize_window()
+        self.wait = WebDriverWait(self.driver, 10)
+        self.driver.get(MAIN_URL)
+
+    def teardown_method(self):
+        self.driver.quit()
 
     # Вход через кнопку "Войти в аккаунт" на главной странице
-
     def test_login_from_main_page(self):
 
         login_page = LoginPage(self.driver)
 
         login_page.click_login_button_main()
 
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/login" in driver.current_url
+        self.wait.until(
+            lambda driver: LOGIN_URL in driver.current_url
         )
 
-        assert "/login" in self.driver.current_url
+        assert LOGIN_URL in self.driver.current_url
 
         login_page.set_email(EMAIL)
         login_page.set_password(PASSWORD)
@@ -33,18 +43,17 @@ class TestLogin:
         assert login_page.is_constructor_visible()
 
     # Вход через кнопку "Личный кабинет"
-
     def test_login_from_personal_account(self):
 
         login_page = LoginPage(self.driver)
 
         login_page.click_personal_account()
 
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/login" in driver.current_url
+        self.wait.until(
+            lambda driver: LOGIN_URL in driver.current_url
         )
 
-        assert "/login" in self.driver.current_url
+        assert LOGIN_URL in self.driver.current_url
 
         login_page.set_email(EMAIL)
         login_page.set_password(PASSWORD)
@@ -54,28 +63,25 @@ class TestLogin:
         assert login_page.is_constructor_visible()
 
     # Вход через кнопку "Войти" в форме регистрации
-
     def test_login_from_register_form(self):
 
         login_page = LoginPage(self.driver)
 
-        self.driver.get(
-            "https://stellarburgers.education-services.ru/register"
+        self.driver.get(REGISTER_URL)
+
+        self.wait.until(
+            lambda driver: REGISTER_URL in driver.current_url
         )
 
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/register" in driver.current_url
-        )
-
-        assert "/register" in self.driver.current_url
+        assert REGISTER_URL in self.driver.current_url
 
         login_page.click_login_from_register()
 
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/login" in driver.current_url
+        self.wait.until(
+            lambda driver: LOGIN_URL in driver.current_url
         )
 
-        assert "/login" in self.driver.current_url
+        assert LOGIN_URL in self.driver.current_url
 
         login_page.set_email(EMAIL)
         login_page.set_password(PASSWORD)
@@ -85,37 +91,33 @@ class TestLogin:
         assert login_page.is_constructor_visible()
 
     # Вход через кнопку в форме восстановления пароля
-
     def test_login_from_forgot_password_form(self):
 
         login_page = LoginPage(self.driver)
 
-        # Переходим на страницу входа
         login_page.click_login_button_main()
 
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/login" in driver.current_url
+        self.wait.until(
+            lambda driver: LOGIN_URL in driver.current_url
         )
 
-        assert "/login" in self.driver.current_url
+        assert LOGIN_URL in self.driver.current_url
 
-        # Нажимаем "Восстановить пароль"
         login_page.click_forgot_password()
 
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/forgot-password" in driver.current_url
+        self.wait.until(
+            lambda driver: FORGOT_PASSWORD in driver.current_url
         )
 
-        assert "/forgot-password" in self.driver.current_url
+        assert FORGOT_PASSWORD in self.driver.current_url
 
-        # Нажимаем "Войти" в форме восстановления пароля
         login_page.click_login_from_forgot_password()
 
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/login" in driver.current_url
+        self.wait.until(
+            lambda driver: LOGIN_URL in driver.current_url
         )
 
-        assert "/login" in self.driver.current_url
+        assert LOGIN_URL in self.driver.current_url
 
         login_page.set_email(EMAIL)
         login_page.set_password(PASSWORD)
@@ -125,16 +127,6 @@ class TestLogin:
         assert login_page.is_constructor_visible()
 
     # Выход из аккаунта через кнопку "Выйти"
-    def setup_method(self):
-        self.driver = webdriver.Chrome()
-        self.driver.maximize_window()
-        self.driver.get(
-            "https://stellarburgers.education-services.ru"
-        )
-
-    def teardown_method(self):
-        self.driver.quit()
-
     def test_logout_from_personal_account(self):
 
         login_page = LoginPage(self.driver)
@@ -142,9 +134,11 @@ class TestLogin:
         # Вход в аккаунт
         login_page.click_login_button_main()
 
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/login" in driver.current_url
+        self.wait.until(
+            lambda driver: LOGIN_URL in driver.current_url
         )
+
+        assert LOGIN_URL in self.driver.current_url
 
         login_page.set_email(EMAIL)
         login_page.set_password(PASSWORD)
@@ -156,17 +150,17 @@ class TestLogin:
         # Переходим в личный кабинет
         login_page.click_personal_account()
 
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/profile" in driver.current_url
+        self.wait.until(
+            lambda driver: ACCOUNT_URL in driver.current_url
         )
 
-        assert "/profile" in self.driver.current_url
+        assert ACCOUNT_URL in self.driver.current_url
 
         # Выходим
         login_page.click_logout()
 
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/login" in driver.current_url
+        self.wait.until(
+            lambda driver: LOGIN_URL in driver.current_url
         )
 
-        assert "/login" in self.driver.current_url
+        assert LOGIN_URL in self.driver.current_url

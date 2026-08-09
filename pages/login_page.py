@@ -23,10 +23,9 @@ class LoginPage:
     LOGIN_FROM_FORGOT_PASSWORD = (By.XPATH,"//a[contains(text(),'Войти')]")
     LOGOUT_BUTTON = (By.XPATH,"//button[text()='Выход']")
     # Конструктор
-    BUNS = (By.XPATH,"//span[text()='Булки']")
-    SAUCES = (By.XPATH,"//span[text()='Соусы']")
-
-    FILLINGS = (By.XPATH,"//span[text()='Начинки']")
+    BUNS = (By.XPATH,"//div[contains(@id301415451 (@class),'tab_tab_type_current')]//span[text()='Булки']")
+    SAUCES = (By.XPATH,"//div[contains(@id301415451 (@class),'tab_tab_type_current')]//span[text()='Соусы']")
+    FILLINGS = (By.XPATH,"//div[contains(@id301415451 (@class),'tab_tab_type_current')]//span[text()='Начинки']")
 
     def __init__(self, driver):
         self.driver = driver
@@ -102,30 +101,58 @@ class LoginPage:
     ).click()
       
     def click_buns(self):
-     element = self.wait.until(
-        EC.visibility_of_element_located(self.BUNS)
-    )
-
-     self.driver.execute_script(
-        "arguments[0].click();",
-        element
-    )
+        element = self.wait.until(
+            EC.element_to_be_clickable(self.BUNS)
+        )
+        self.driver.execute_script(
+            "arguments[0].click();",
+            element
+        )
     def click_sauces(self):
-     element = self.wait.until(
-        EC.visibility_of_element_located(self.SAUCES)
-    )
-
-     self.driver.execute_script(
-        "arguments[0].click();",
-        element
-    )
-
+        element = self.wait.until(
+            EC.element_to_be_clickable(self.SAUCES)
+        )
+        self.driver.execute_script(
+            "arguments[0].click();",
+            element
+        )
     def click_fillings(self):
-     element = self.wait.until(
-        EC.visibility_of_element_located(self.FILLINGS)
-    )
+        element = self.wait.until(
+            EC.element_to_be_clickable(self.FILLINGS)
+        )
+        self.driver.execute_script(
+            "arguments[0].click();",
+            element
+        )
+    def is_buns_selected(self):
+     return self.wait.until(
+        EC.presence_of_element_located(
+            (
+                By.XPATH,
+                "//div[contains(@class,'tab_tab_type_current')]//span[text()='Булки']"
+            )
+        )
+    ).is_displayed()
 
-     self.driver.execute_script(
-        "arguments[0].click();",
-        element
-    )
+     return element.is_displayed()
+    
+    def is_sauces_selected(self):
+     return self.wait.until(
+        EC.presence_of_element_located(
+            (
+                By.XPATH,
+                "//div[contains(@class,'tab_tab_type_current')]//span[text()='Соусы']"
+            )
+        )
+    ).is_displayed()
+
+    
+    def is_fillings_selected(self):
+     return self.wait.until(
+        EC.presence_of_element_located(
+            (
+                By.XPATH,
+                "//div[contains(@class,'tab_tab_type_current')]//span[text()='Начинки']"
+            )
+        )
+    ).is_displayed()

@@ -2,43 +2,64 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import random
+from pages.url import REGISTER_URL
+from helpers import BadPassword
 
 class TestRegistrationBadPassword:
+    def setup_method(self):
+        self.driver = webdriver.Chrome()
+        self.driver.maximize_window()
+        self.wait = WebDriverWait(self.driver, 10)
+        self.driver.get(REGISTER_URL)
+
+    def teardown_method(self):
+        self.driver.quit()
 
     def test_registration_with_incorrect_password(self):
+        # Генерируем уникальный email
+        email = BadPassword.generate_email()
+        # Генерируем некорректный пароль
+        password = BadPassword.generate_password()
+        # Поле «Имя»
 
-        # Уникальный email
-        email = f"vika_50_{random.randint(1000,9999)}@yandex.ru"
+        name = self.wait.until(
+            EC.visibility_of_element_located(
 
-        # Поле Имя
-        self.driver.find_element(
-            By.XPATH,
-            "//label[text()='Имя']/following-sibling::input"
-        ).send_keys("Вика")
+                (By.XPATH, "//label[text()='Имя']/following-sibling::input")
 
-        # Поле Email
-        self.driver.find_element(
+            )
+        )
+        name.send_keys("Вика")
+
+        # Поле «Email»
+
+        email_input = self.driver.find_element(
             By.XPATH,
             "//label[text()='Email']/following-sibling::input"
-        ).send_keys(email)
+        )
 
-        # Некорректный пароль (меньше 6 символов)
-        self.driver.find_element(
+        email_input.send_keys(email)
+        # Поле «Пароль»
+        password_input = self.driver.find_element(
             By.XPATH,
             "//input[@type='password']"
-        ).send_keys("12345")
+        )
 
-        # Кнопка регистрации
-        self.driver.find_element(
+        password_input.send_keys(password)
+
+        # Кнопка «Зарегистрироваться»
+
+        register_button = self.driver.find_element(
             By.XPATH,
             "//button[text()='Зарегистрироваться']"
-        ).click()
+        )
 
-        # Проверяем ошибку
+        register_button.click()
+        # Проверяем сообщение о некорректном пароле
         error = self.wait.until(
             EC.visibility_of_element_located(
                 (By.XPATH, "//*[text()='Некорректный пароль']")
+
             )
         )
 
