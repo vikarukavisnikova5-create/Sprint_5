@@ -1,122 +1,84 @@
-from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
-
-from pages.login_page import LoginPage
-
-EMAIL = "victoria_rukavishnikova_50_666@ya.ru"
-PASSWORD = "password1234"
-
+from locators import Locators
+from data import EMAIL, PASSWORD
+from pages.url import MAIN_PAGE_URL, ACCOUNT_URL
 class TestNavigation:
-
-    def setup_method(self):
-        self.driver = webdriver.Chrome()
-        self.driver.maximize_window()
-        self.driver.get(
-            "https://stellarburgers.education-services.ru"
+    # Проверяем переход в личный кабинет
+    def test_go_to_personal_account(self, driver):
+        locators = Locators(driver)
+        # Нажимаем «Войти в аккаунт»
+        locators.click_login_button_main()
+        # Вводим email
+        locators.set_email(EMAIL)
+        # Вводим пароль
+        locators.set_password(PASSWORD)
+        # Нажимаем «Войти»
+        locators.click_login()
+        # Ждём успешного входа
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url != "https://stellarburgers.education-services.ru/login"
         )
-
-    def teardown_method(self):
-        self.driver.quit()
-
-    # Переход в личный кабинет
-
-    def test_go_to_personal_account(self):
-
-        login_page = LoginPage(self.driver)
-
-        # Нажимаем "Войти в аккаунт"
-        login_page.click_login_button_main()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/login" in driver.current_url
+        # Нажимаем «Личный кабинет»
+        locators.click_personal_account()
+        # Ждём переход в личный кабинет
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url == ACCOUNT_URL
         )
-
-        login_page.set_email(EMAIL)
-        login_page.set_password(PASSWORD)
-
-        login_page.click_login()
-
-        # Проверяем вход
-        assert login_page.is_constructor_visible()
-
-        # Переходим в личный кабинет
-        login_page.click_personal_account()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/profile" in driver.current_url
+        # Проверяем переход в личный кабинет
+        assert driver.current_url == ACCOUNT_URL
+    # Проверяем переход из личного кабинета в конструктор
+    def test_go_to_constructor_from_personal_account(self, driver):
+        locators = Locators(driver)
+        # Нажимаем «Войти в аккаунт»
+        locators.click_login_button_main()
+        # Вводим email
+        locators.set_email(EMAIL)
+        # Вводим пароль
+        locators.set_password(PASSWORD)
+        # Нажимаем «Войти»
+        locators.click_login()
+        # Ждём успешного входа
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url != "https://stellarburgers.education-services.ru/login"
         )
-
-        assert "/profile" in self.driver.current_url
-
-    # Переход из личного кабинета в Конструктор
-
-    def test_go_to_constructor_from_personal_account(self):
-
-        login_page = LoginPage(self.driver)
-
-        # Авторизация
-        login_page.click_login_button_main()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/login" in driver.current_url
-        )
-
-        login_page.set_email(EMAIL)
-        login_page.set_password(PASSWORD)
-
-        login_page.click_login()
-
-        assert login_page.is_constructor_visible()
-
         # Открываем личный кабинет
-        login_page.click_personal_account()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/profile" in driver.current_url
+        locators.click_personal_account()
+        # Ждём открытия личного кабинета
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url == ACCOUNT_URL
         )
-
-        # Нажимаем "Конструктор"
-        login_page.click_constructor()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/" in driver.current_url
+        # Нажимаем «Конструктор»
+        locators.click_constructor()
+        # Проверяем переход на главную страницу
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url == MAIN_PAGE_URL
         )
-
-        assert "/profile" not in self.driver.current_url
-
-    # Переход по логотипу Stellar Burgers
-
-    def test_go_to_constructor_by_logo(self):
-
-        login_page = LoginPage(self.driver)
-
-        # Авторизация
-        login_page.click_login_button_main()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/login" in driver.current_url
+        assert driver.current_url == MAIN_PAGE_URL
+    # Проверяем переход в конструктор через логотип
+    def test_go_to_constructor_by_logo(self, driver):
+        locators = Locators(driver)
+        # Нажимаем «Войти в аккаунт»
+        locators.click_login_button_main()
+        # Вводим email
+        locators.set_email(EMAIL)
+        # Вводим пароль
+        locators.set_password(PASSWORD)
+        # Нажимаем «Войти»
+        locators.click_login()
+        # Ждём успешного входа
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url != "https://stellarburgers.education-services.ru/login"
         )
-
-        login_page.set_email(EMAIL)
-        login_page.set_password(PASSWORD)
-
-        login_page.click_login()
-
-        assert login_page.is_constructor_visible()
-
-        # Переходим в личный кабинет
-        login_page.click_personal_account()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/profile" in driver.current_url
+        # Открываем личный кабинет
+        locators.click_personal_account()
+        # Ждём открытия личного кабинета
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url == ACCOUNT_URL
         )
-
-        # Нажимаем логотип
-        login_page.click_logo()
-
-        WebDriverWait(self.driver, 10).until(
-            lambda driver: "/profile" not in driver.current_url
+        # Нажимаем на логотип Stellar Burgers
+        locators.click_logo()
+        # Проверяем переход на главную страницу
+        WebDriverWait(driver, 10).until(
+            lambda driver: driver.current_url == MAIN_PAGE_URL
         )
-
-        assert "/profile" not in self.driver.current_url
-
+        assert driver.current_url == MAIN_PAGE_URL

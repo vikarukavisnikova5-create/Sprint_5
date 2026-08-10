@@ -1,57 +1,91 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import random
+from pages.url import REGISTER_URL
+from locators import Locators
+from helpers import BadPassword
 
-class TestRegistration:
+class TestRegistrationBadPassword:
 
     def setup_method(self):
+
         self.driver = webdriver.Chrome()
+
         self.driver.maximize_window()
 
         self.wait = WebDriverWait(self.driver, 10)
 
-        self.driver.get(
-            "https://stellarburgers.education-services.ru/register"
-        )
+        self.driver.get(REGISTER_URL)
 
     def teardown_method(self):
+
         self.driver.quit()
 
     def test_registration_with_incorrect_password(self):
 
-        # Уникальный email
-        email = f"vika_50_{random.randint(1000,9999)}@yandex.ru"
+        # Генерируем уникальный email
 
-        # Поле Имя
-        self.driver.find_element(
-            By.XPATH,
-            "//label[text()='Имя']/following-sibling::input"
-        ).send_keys("Вика")
+        email = BadPassword.generate_email()
 
-        # Поле Email
-        self.driver.find_element(
-            By.XPATH,
-            "//label[text()='Email']/following-sibling::input"
-        ).send_keys(email)
+        # Генерируем некорректный пароль
 
-        # Некорректный пароль (меньше 6 символов)
-        self.driver.find_element(
-            By.XPATH,
-            "//input[@type='password']"
-        ).send_keys("12345")
+        password = BadPassword.generate_password()
 
-        # Кнопка регистрации
-        self.driver.find_element(
-            By.XPATH,
-            "//button[text()='Зарегистрироваться']"
-        ).click()
+        # Поле «Имя»
 
-        # Проверяем ошибку
-        error = self.wait.until(
+        name = self.wait.until(
+
             EC.visibility_of_element_located(
-                (By.XPATH, "//*[text()='Некорректный пароль']")
+
+                Locators.NAME
+            )
+        )
+
+        name.send_keys("Вика")
+
+        # Поле «Email»
+
+        email_input = self.wait.until(
+
+            EC.visibility_of_element_located(
+
+                Locators.REGISTER_EMAIL_FIELD
+            )
+        )
+
+        email_input.send_keys(email)
+
+        # Поле «Пароль»
+
+        password_input = self.wait.until(
+
+            EC.visibility_of_element_located(
+
+                Locators.REGISTER_PASSWORD_FIELD
+            )
+        )
+
+        password_input.send_keys(password)
+
+        # Кнопка «Зарегистрироваться»
+
+        register_button = self.wait.until(
+
+            EC.element_to_be_clickable(
+
+                Locators.REGISTER_BUTTON
+            )
+        )
+
+        register_button.click()
+
+        # Проверяем сообщение о некорректном пароле
+
+        error = self.wait.until(
+
+            EC.visibility_of_element_located(
+
+                Locators.INVALID_PASSWORD
             )
         )
 
