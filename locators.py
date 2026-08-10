@@ -1,20 +1,27 @@
-# LOCATORS
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-class LoginPage:
+class Locators:
 
     # Главная страница
+
     LOGO = (By.XPATH,"//header//a")
     CONSTRUCTOR_BUTTON = (By.XPATH,"//p[text()='Конструктор']")
     LOGIN_MAIN_BUTTON = (By.XPATH,"//button[contains(text(),'Войти в аккаунт')]")
     PERSONAL_ACCOUNT_BUTTON = (By.XPATH,"//a[contains(@href,'account')]")
+
     # Страница регистрации
-    REGISTER_LINK = (By.XPATH,"//a[contains(text(),'Зарегистрироваться')]")
+   
+
+    NAME = (By.XPATH,"//label[text()='Имя']/following-sibling::input")
+    REGISTER_EMAIL_FIELD = (By.XPATH,"//label[text()='Email']/following-sibling::input")
+    REGISTER_PASSWORD_FIELD = (By.XPATH,"//input[@type='password']")
+    REGISTER_BUTTON = (By.XPATH,"//button[text()='Зарегистрироваться']")
     LOGIN_FROM_REGISTER = (By.XPATH,"//a[contains(text(),'Войти')]")
+
     # Страница входа
+
     EMAIL_FIELD = (By.XPATH,"//input[@type='text']")
     PASSWORD_FIELD = (By.XPATH,"//input[@type='password']")
     LOGIN_BUTTON = (By.XPATH,"//button[contains(text(),'Войти')]")
@@ -22,10 +29,13 @@ class LoginPage:
     FORGOT_PASSWORD_LINK = (By.XPATH,"//a[contains(text(),'Восстановить пароль')]")
     LOGIN_FROM_FORGOT_PASSWORD = (By.XPATH,"//a[contains(text(),'Войти')]")
     LOGOUT_BUTTON = (By.XPATH,"//button[text()='Выход']")
+    INVALID_PASSWORD = (By.XPATH,"//*[text()='Некорректный пароль']")
+
     # Конструктор
-    BUNS = (By.XPATH,"//div[contains(@id301415451 (@class),'tab_tab_type_current')]//span[text()='Булки']")
-    SAUCES = (By.XPATH,"//div[contains(@id301415451 (@class),'tab_tab_type_current')]//span[text()='Соусы']")
-    FILLINGS = (By.XPATH,"//div[contains(@id301415451 (@class),'tab_tab_type_current')]//span[text()='Начинки']")
+
+    BUNS = (By.XPATH,"//span[text()='Булки']/parent::div")
+    SAUCES = (By.XPATH,"//span[text()='Соусы']/parent::div")
+    FILLINGS = (By.XPATH,"//span[text()='Начинки']/parent::div")
 
     def __init__(self, driver):
         self.driver = driver
@@ -86,9 +96,11 @@ class LoginPage:
     ).click()
 
     def click_login_from_forgot_password(self):
-        self.wait.until(
-            EC.element_to_be_clickable(self.LOGIN_FROM_REGISTER)
-        ).click()
+     self.wait.until(
+        EC.element_to_be_clickable(
+            self.LOGIN_FROM_FORGOT_PASSWORD
+        )
+    ).click()
        
     def click_constructor(self):
         self.wait.until(

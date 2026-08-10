@@ -1,8 +1,8 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from pages.url import MAIN_URL
+from locators import Locators
 class TestConstructor:
     def setup_method(self):
         self.driver = webdriver.Chrome()
@@ -16,10 +16,7 @@ class TestConstructor:
         # Находим таб «Соусы»
         sauces = self.wait.until(
             EC.presence_of_element_located(
-                (
-                    By.XPATH,
-                    "//span[text()='Соусы']/parent::div"
-                )
+                Locators.SAUCES
             )
         )
         # Нажимаем «Соусы»
@@ -30,10 +27,7 @@ class TestConstructor:
         # Находим таб «Булки»
         buns = self.wait.until(
             EC.presence_of_element_located(
-                (
-                    By.XPATH,
-                    "//span[text()='Булки']/parent::div"
-                )
+                Locators.BUNS
             )
         )
         # Нажимаем «Булки»
@@ -41,19 +35,17 @@ class TestConstructor:
             "arguments[0].click();",
             buns
         )
-        # Проверяем класс активного таба
+        # Проверяем, что «Булки» стали активными
         self.wait.until(
-            lambda driver: "tab_tab_type_current" in buns.get_attribute("class")
+            lambda driver:
+            "tab_tab_type_current" in buns.get_attribute("class")
         )
         assert "tab_tab_type_current" in buns.get_attribute("class")
     # Проверяем переключение на «Соусы»
     def test_sauces_tab(self):
         sauces = self.wait.until(
             EC.presence_of_element_located(
-                (
-                    By.XPATH,
-                    "//span[text()='Соусы']/parent::div"
-                )
+                Locators.SAUCES
             )
         )
         # Нажимаем «Соусы»
@@ -61,19 +53,17 @@ class TestConstructor:
             "arguments[0].click();",
             sauces
         )
-        # Проверяем класс активного таба
+        # Проверяем, что «Соусы» стали активными
         self.wait.until(
-            lambda driver: "tab_tab_type_current" in sauces.get_attribute("class")
+            lambda driver:
+            "tab_tab_type_current" in sauces.get_attribute("class")
         )
         assert "tab_tab_type_current" in sauces.get_attribute("class")
     # Проверяем переключение на «Начинки»
     def test_fillings_tab(self):
         fillings = self.wait.until(
             EC.presence_of_element_located(
-                (
-                    By.XPATH,
-                    "//span[text()='Начинки']/parent::div"
-                )
+                Locators.FILLINGS
             )
         )
         # Нажимаем «Начинки»
@@ -81,8 +71,9 @@ class TestConstructor:
             "arguments[0].click();",
             fillings
         )
-        # Проверяем класс активного таба
+        # Проверяем, что «Начинки» стали активными
         self.wait.until(
-            lambda driver: "tab_tab_type_current" in fillings.get_attribute("class")
+            lambda driver:
+            "tab_tab_type_current" in fillings.get_attribute("class")
         )
         assert "tab_tab_type_current" in fillings.get_attribute("class")
